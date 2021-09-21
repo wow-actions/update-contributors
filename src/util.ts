@@ -11,6 +11,7 @@ export namespace Util {
   export function getInputs() {
     return {
       sort: core.getInput('sort') !== 'false',
+      shorten: core.getInput('shorten') !== 'true',
       includeCollaborators: core.getInput('include_collaborators') !== 'false',
       includeBots: core.getInput('include_bots') !== 'false',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
@@ -134,10 +135,24 @@ export namespace Util {
 
     core.debug(`ExcludeUsers: ${JSON.stringify(excludeUsers, null, 2)}`)
 
-    const users: { name: string; email: string }[] = []
-    const push = (name?: string | null, email?: string | null) => {
-      if (name && !excludeUsers.includes(name)) {
-        users.push({ name, email: email || emailMap[name] || '' })
+    const users: {
+      name: string
+      email: string
+      url: string
+    }[] = []
+
+    const push = (user: {
+      login?: string | null
+      email?: string | null
+      // eslint-disable-next-line camelcase
+      html_url?: string | null
+    }) => {
+      if (user.login && !excludeUsers.includes(user.login)) {
+        users.push({
+          name: user.login,
+          email: user.email || emailMap[user.login] || '',
+          url: user.html_url || '',
+        })
       }
     }
 
@@ -148,11 +163,11 @@ export namespace Util {
     core.debug(`Contributors: ${JSON.stringify(contributors, null, 2)}`)
 
     if (options.includeBots) {
-      contributors.forEach((user) => push(user.login, user.email))
+      contributors.forEach((user) => push(user))
     } else {
       contributors
-        .filter((u) => u.type !== 'Bot')
-        .forEach((u) => push(u.login, u.email))
+        .filter((user) => user.type !== 'Bot')
+        .forEach((user) => push(user))
     }
 
     if (options.includeCollaborators) {
@@ -163,7 +178,7 @@ export namespace Util {
         options.affiliation,
       )
       core.debug(`Collaborators: ${JSON.stringify(collaborators, null, 2)}`)
-      collaborators.forEach((u) => push(u.login, u.email))
+      collaborators.forEach((user) => push(user))
     }
 
     return users

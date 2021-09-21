@@ -33,26 +33,30 @@ export namespace Action {
       if (res) {
         const raw = Buffer.from((res.data as any).content, 'base64').toString()
         const pkg = JSON.parse(raw)
-        const contributors: { name: string; email: string }[] = Array.isArray(
-          pkg.contributors,
-        )
-          ? pkg.contributors
-          : []
+        const contributors: { name: string; email?: string; url?: string }[] =
+          Array.isArray(pkg.contributors) ? pkg.contributors : []
 
         const find = (name: string) => contributors.find((u) => u.name === name)
         let updated = false
 
         users.forEach((user) => {
           const found = find(user.name)
-          const email = user.email || ''
           if (found) {
-            if (email !== found.email) {
-              found.email = email
+            if (user.email !== found.email) {
               updated = true
+              found.email = user.email
+            }
+            if (user.url !== found.url) {
+              updated = true
+              found.url = user.url
             }
           } else {
             updated = true
-            contributors.push({ email, name: user.name })
+            contributors.push({
+              name: user.name,
+              email: user.email,
+              url: user.url,
+            })
           }
         })
 
