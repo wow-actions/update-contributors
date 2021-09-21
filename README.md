@@ -20,7 +20,6 @@ jobs:
       - uses: wow-actions/update-contributors@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          includeBots: true
 ```
 
 ### Inputs
