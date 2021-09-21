@@ -1,5 +1,5 @@
 <h1 align="center">Update Contributors</h1>
-<p align="center"><strong>Automatically update contributors field of <code>package.json</code> for your repository</strong></p>
+<p align="center"><strong>Automatically update <a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#people-fields-author-contributors">contributors field</a> of <code>package.json</code> for your repository</strong></p>
 
 ## Usage
 
