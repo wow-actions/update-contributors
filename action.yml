@@ -11,30 +11,26 @@ inputs:
     required: false
     default: true
 
-  count:
-    description: Specify the max count of contributors listed. Default list all contributors.
-    required: false
-
   affiliation:
-    description: 'Type of collaborators options: all/direct/outside.'
+    description: 'Type of collaborators: all/direct/outside.'
     required: false
     default: direct
 
-  includeCollaborators:
+  include_collaborators:
     description: Should include collaborators or not.
     required: false
     default: true
 
-  includeBots:
+  include_bots:
     description: Should include bots or not.
     required: false
     default: true
 
-  excludeUsers:
+  exclude_users:
     description: Users to exclude.
     required: false
 
-  commitMessage:
+  commit_message:
     description: Commit message of the github action.
     required: false
     default: 'chore: update contributors [skip ci]'

@@ -34,10 +34,10 @@ Various inputs are defined to let you configure the action:
   - `'outside'`: All outside collaborators of an organization-owned repository.
   - `'direct'`: All collaborators with permissions to an organization-owned repository, regardless of organization membership status.
   - `'all'`: All collaborators the authenticated user can see.
-- `includeCollaborators`: Specify if include collaborators or not. Default `true`.
-- `includeBots`: Specify if include bots in the contributors list or not. Default `true`.
-- `excludeUsers`: Users separated by space to exclude in the contributors list.
-- `commitMessage`: Commit message of the github action. Default: `'chore: update contributors'`
+- `include_collaborators`: Specify if include collaborators or not. Default `true`.
+- `include_bots`: Specify if include bots in the contributors list or not. Default `true`.
+- `exclude_users`: Users separated by space to exclude in the contributors list.
+- `commit_message`: Commit message of the github action. Default: `'chore: update contributors'`
 
 ## License
 

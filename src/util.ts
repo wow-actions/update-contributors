@@ -8,14 +8,12 @@ export namespace Util {
   }
 
   export function getInputs() {
-    const count = parseInt(core.getInput('count'), 10)
     return {
-      sort: core.getInput('sort') === 'true',
-      count: Number.isNaN(count) ? null : count,
-      includeCollaborators: core.getInput('includeCollaborators') === 'true',
-      includeBots: core.getInput('includeBots') === 'true',
+      sort: core.getInput('sort') !== 'false',
+      includeCollaborators: core.getInput('include_collaborators') !== 'false',
+      includeBots: core.getInput('include_bots') !== 'false',
       affiliation: core.getInput('affiliation') as 'all' | 'direct' | 'outside',
-      commitMessage: core.getInput('commitMessage'),
+      commitMessage: core.getInput('commit_message'),
     }
   }
 
@@ -48,8 +46,6 @@ export namespace Util {
         }
       }
     }
-
-    core.debug(`Contributors: ${JSON.stringify(users, null, 2)}`)
 
     return users
   }
@@ -85,8 +81,6 @@ export namespace Util {
       }
     }
 
-    core.debug(`Collaborators: ${JSON.stringify(users, null, 2)}`)
-
     return users
   }
 
@@ -96,10 +90,12 @@ export namespace Util {
     repo: string,
     options: ReturnType<typeof getInputs>,
   ) {
-    const excludeUsers = (core.getInput('excludeUsers') || '')
+    const excludeUsers = (core.getInput('exclude_users') || '')
       .split(/\s+/)
       .map((user) => user.trim())
       .filter((user) => user.length > 0)
+
+    core.debug(`ExcludeUsers: ${JSON.stringify(excludeUsers, null, 2)}`)
 
     const users: { name: string; email: string }[] = []
     const push = (name?: string | null, email?: string | null) => {
@@ -112,6 +108,7 @@ export namespace Util {
     if (options.sort) {
       contributors.sort((a, b) => b.contributions - a.contributions)
     }
+    core.debug(`Contributors: ${JSON.stringify(contributors, null, 2)}`)
 
     if (options.includeBots) {
       contributors.forEach((user) => push(user.name, user.email))
@@ -128,6 +125,7 @@ export namespace Util {
         repo,
         options.affiliation,
       )
+      core.debug(`Collaborators: ${JSON.stringify(collaborators, null, 2)}`)
       collaborators.forEach((u) => push(u.name, u.email))
     }
 
