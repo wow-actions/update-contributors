@@ -62,5 +62,20 @@
     "typescript": "^4.4.3"
   },
   "contributors": [
+    {
+      "name": "bubkoo",
+      "email": "",
+      "url": "https://github.com/bubkoo"
+    },
+    {
+      "name": "18cm",
+      "email": "",
+      "url": "https://github.com/18cm"
+    },
+    {
+      "name": "github-actions[bot]",
+      "email": "",
+      "url": "https://github.com/apps/github-actions"
+    }
   ]
 }
