@@ -1,0 +1,48 @@
+name: Update Contributors
+description: Automatically update contributors field of package.json for your repository
+author: bubkoo <bubkoo.wy@gmail.com>
+inputs:
+  GITHUB_TOKEN:
+    description: Your GitHub token for authentication.
+    required: true
+
+  sort:
+    description: Specify if sort contributors by contributions or not. Default `true`.
+    required: false
+    default: true
+
+  count:
+    description: Specify the max count of contributors listed. Default list all contributors.
+    required: false
+
+  affiliation:
+    description: 'Type of collaborators options: all/direct/outside.'
+    required: false
+    default: direct
+
+  includeCollaborators:
+    description: Should include collaborators or not.
+    required: false
+    default: true
+
+  includeBots:
+    description: Should include bots or not.
+    required: false
+    default: false
+
+  excludeUsers:
+    description: Users to exclude.
+    required: false
+
+  commitMessage:
+    description: Commit message of the github action.
+    required: false
+    default: 'chore: update contributors [skip ci]'
+
+runs:
+  using: node12
+  main: dist/index.js
+
+branding:
+  icon: heart
+  color: orange
