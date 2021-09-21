@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { exec } from 'child_process'
 
 export namespace Util {
   export function getOctokit() {
@@ -84,6 +85,36 @@ export namespace Util {
     return users
   }
 
+  function getUsersFromLog(): Promise<
+    {
+      commits: number
+      name: string
+      email: string
+    }[]
+  > {
+    return new Promise((resolve) => {
+      exec('git shortlog -se --all', (err, stdout) => {
+        if (err) {
+          resolve([])
+        } else {
+          const authors = stdout
+            .split(/\n/)
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0)
+            .map((line) => {
+              const parts = line.split(/[\t\s]+/)
+              return {
+                commits: parseInt(parts[0], 10),
+                name: parts[1],
+                email: parts[2].substr(1, parts[2].length - 2),
+              }
+            })
+          resolve(authors)
+        }
+      })
+    })
+  }
+
   export async function getUsers(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
@@ -95,12 +126,18 @@ export namespace Util {
       .map((user) => user.trim())
       .filter((user) => user.length > 0)
 
+    const logUsers = await getUsersFromLog()
+    const emailMap: Record<string, string> = {}
+    logUsers.forEach((user) => {
+      emailMap[user.name] = user.email
+    })
+
     core.debug(`ExcludeUsers: ${JSON.stringify(excludeUsers, null, 2)}`)
 
     const users: { name: string; email: string }[] = []
     const push = (name?: string | null, email?: string | null) => {
       if (name && !excludeUsers.includes(name)) {
-        users.push({ name, email: email || '' })
+        users.push({ name, email: email || emailMap[name] || '' })
       }
     }
 
@@ -111,11 +148,11 @@ export namespace Util {
     core.debug(`Contributors: ${JSON.stringify(contributors, null, 2)}`)
 
     if (options.includeBots) {
-      contributors.forEach((user) => push(user.name, user.email))
+      contributors.forEach((user) => push(user.login, user.email))
     } else {
       contributors
         .filter((u) => u.type !== 'Bot')
-        .forEach((u) => push(u.name, u.email))
+        .forEach((u) => push(u.login, u.email))
     }
 
     if (options.includeCollaborators) {
@@ -126,7 +163,7 @@ export namespace Util {
         options.affiliation,
       )
       core.debug(`Collaborators: ${JSON.stringify(collaborators, null, 2)}`)
-      collaborators.forEach((u) => push(u.name, u.email))
+      collaborators.forEach((u) => push(u.login, u.email))
     }
 
     return users

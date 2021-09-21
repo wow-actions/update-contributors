@@ -17,6 +17,9 @@ jobs:
   contributors:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: wow-actions/update-contributors@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
