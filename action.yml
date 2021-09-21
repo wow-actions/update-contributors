@@ -28,7 +28,7 @@ inputs:
   includeBots:
     description: Should include bots or not.
     required: false
-    default: false
+    default: true
 
   excludeUsers:
     description: Users to exclude.
