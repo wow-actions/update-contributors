@@ -42,11 +42,11 @@ export namespace Action {
         users.forEach((user) => {
           const found = find(user.name)
           if (found) {
-            if (user.email !== found.email) {
+            if (user.email !== found.email && user.email) {
               updated = true
               found.email = user.email
             }
-            if (user.url !== found.url) {
+            if (user.url !== found.url && user.url) {
               updated = true
               found.url = user.url
             }
