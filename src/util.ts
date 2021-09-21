@@ -19,7 +19,7 @@ export namespace Util {
     }
   }
 
-  async function getAllContributors(
+  async function getContributors(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
     repo: string,
@@ -49,10 +49,12 @@ export namespace Util {
       }
     }
 
+    core.debug(`Contributors: ${JSON.stringify(users, null, 2)}`)
+
     return users
   }
 
-  async function getAllCollaborators(
+  async function getCollaborators(
     octokit: ReturnType<typeof github.getOctokit>,
     owner: string,
     repo: string,
@@ -83,6 +85,8 @@ export namespace Util {
       }
     }
 
+    core.debug(`Collaborators: ${JSON.stringify(users, null, 2)}`)
+
     return users
   }
 
@@ -97,14 +101,14 @@ export namespace Util {
       .map((user) => user.trim())
       .filter((user) => user.length > 0)
 
-    const users: { name: string; email?: string | null }[] = []
+    const users: { name: string; email: string }[] = []
     const push = (name?: string | null, email?: string | null) => {
       if (name && !excludeUsers.includes(name)) {
-        users.push({ name, email })
+        users.push({ name, email: email || '' })
       }
     }
 
-    const contributors = await getAllContributors(octokit, owner, repo)
+    const contributors = await getContributors(octokit, owner, repo)
     if (options.sort) {
       contributors.sort((a, b) => b.contributions - a.contributions)
     }
@@ -118,7 +122,7 @@ export namespace Util {
     }
 
     if (options.includeCollaborators) {
-      const collaborators = await getAllCollaborators(
+      const collaborators = await getCollaborators(
         octokit,
         owner,
         repo,
