@@ -62,20 +62,5 @@
     "typescript": "^4.4.3"
   },
   "contributors": [
-    {
-      "email": "bubkoo.wy@gmail.com",
-      "name": "bubkoo",
-      "url": "https://github.com/bubkoo"
-    },
-    {
-      "email": "",
-      "name": "18cm",
-      "url": "https://github.com/18cm"
-    },
-    {
-      "name": "github-actions[bot]",
-      "email": "",
-      "url": "https://github.com/apps/github-actions"
-    }
   ]
 }
