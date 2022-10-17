@@ -36,7 +36,7 @@ inputs:
     default: 'chore: update contributors [skip ci]'
 
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
 
 branding:
